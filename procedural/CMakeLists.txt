@@ -13,9 +13,14 @@ SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -Wall -Werror -fdump-rtl-expand")
 
 set(SRCS
   main.c
+  logic.c
+  rendering.c
 )
 
 set(HEADERS
+  logic.h
+  rendering.h
+  game.h
 )
 
 add_executable(procedural ${SRCS} ${HEADERS})
