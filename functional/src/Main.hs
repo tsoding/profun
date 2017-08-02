@@ -7,7 +7,7 @@ import Game
 import Logic
 import Rendering
 
-window = InWindow "Functional" (640, 480) (100, 100)
+window = InWindow "Functional" (screenWidth, screenHeight) (100, 100)
 backgroundColor = makeColor 0 0 0 255
 
 main :: IO ()
