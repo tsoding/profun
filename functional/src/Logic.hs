@@ -1,6 +1,7 @@
 module Logic where
 
 import Data.Array
+import Data.Foldable ( asum )
 
 import Game
 import Graphics.Gloss.Interface.Pure.Game
@@ -12,29 +13,26 @@ switchPlayer game =
       PlayerX -> game { gamePlayer = PlayerO }
       PlayerO -> game { gamePlayer = PlayerX }
 
-playerWon :: Player -> Board -> Bool
-playerWon player board = any isVictoryProj projs
-    where projs = allRowCoords
-                  ++ allColumnCoords
-                  ++ allDiagCoords
-          allRowCoords = [[(i, j) | j <- [0 .. n - 1]] | i <- [0 .. n - 1]]
-          allColumnCoords = [[(j, i) | j <- [0 .. n - 1]] | i <- [0 .. n - 1]]
-          allDiagCoords = [ [(i, i) | i <- [0 .. n - 1]]
-                          , [(i, n - 1 - i) | i <- [0 .. n - 1]]
-                          ]
-          isVictoryProj proj = (n ==)
-                               $ length
-                               $ filter (\cell -> cell == Full player)
-                               $ map (\coord -> board ! coord) proj
+full :: [Cell] -> Maybe Player
+full (x@(Just player):xs) | and $ map (== x) xs = Just player
+full _                                          = Nothing
+
+winner :: Board -> Maybe Player
+winner board = asum $ map full cells
+    where cells = map (map (board !)) coords :: [[Cell]]
+          coords = rows ++ cols ++ diags
+
+          rows  = [[(i,j) | i <- [0..n-1]] | j <- [0..n-1]]
+          cols  = [[(j,i) | i <- [0..n-1]] | j <- [0..n-1]]
+          diags = [[(i,i) | i <- [0..n-1]]
+                  ,[(i,j) | i <- [0..n-1], let j = n-1-i ]]
 
 countCells :: Cell -> Board -> Int
 countCells cell = length . filter ((==) cell) . elems
 
 checkGameOver game
-    | playerWon PlayerX board =
-        game { gameState = GameOver $ Just PlayerX }
-    | playerWon PlayerO board =
-        game { gameState = GameOver $ Just PlayerO }
+    | Just p <- winner board =
+        game { gameState = GameOver $ Just p }
     | countCells Nothing board == 0 =
         game { gameState = GameOver Nothing }
     | otherwise = game
