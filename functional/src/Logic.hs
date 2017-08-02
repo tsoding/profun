@@ -35,17 +35,17 @@ checkGameOver game
         game { gameState = GameOver $ Just PlayerX }
     | playerWon PlayerO board =
         game { gameState = GameOver $ Just PlayerO }
-    | countCells Empty board == 0 =
+    | countCells Nothing board == 0 =
         game { gameState = GameOver Nothing }
     | otherwise = game
     where board = gameBoard game
 
 playerTurn :: Game -> (Int, Int) -> Game
 playerTurn game cellCoord
-    | isCoordCorrect cellCoord && board ! cellCoord == Empty =
+    | isCoordCorrect cellCoord && board ! cellCoord == Nothing =
         checkGameOver
         $ switchPlayer
-        $ game { gameBoard = board // [(cellCoord, Full $ player)] }
+        $ game { gameBoard = board // [(cellCoord, Just player)] }
     | otherwise = game
     where board = gameBoard game
           player = gamePlayer game
