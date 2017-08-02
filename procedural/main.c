@@ -34,11 +34,11 @@ int main(int argc, char *argv[])
     }
 
     game_t game = {
-        .board = { PLAYER_X, PLAYER_O, PLAYER_O,
-                   EMPTY, PLAYER_X, EMPTY,
+        .board = { EMPTY, EMPTY, EMPTY,
+                   EMPTY, EMPTY, EMPTY,
                    EMPTY, EMPTY, EMPTY },
         .player = PLAYER_X,
-        .state = TIE_STATE
+        .state = RUNNING_STATE
     };
 
     SDL_Event e;
