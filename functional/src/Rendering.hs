@@ -43,10 +43,10 @@ cellsOfBoard board cell cellPicture =
     $ assocs board
 
 xCellsOfBoard :: Board -> Picture
-xCellsOfBoard board = cellsOfBoard board (Full PlayerX) xCell
+xCellsOfBoard board = cellsOfBoard board (Just PlayerX) xCell
 
 oCellsOfBoard :: Board -> Picture
-oCellsOfBoard board = cellsOfBoard board (Full PlayerO) oCell
+oCellsOfBoard board = cellsOfBoard board (Just PlayerO) oCell
 
 boardGrid :: Picture
 boardGrid =
