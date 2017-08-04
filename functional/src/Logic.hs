@@ -14,18 +14,15 @@ switchPlayer game =
       PlayerO -> game { gamePlayer = PlayerX }
 
 full :: [Cell] -> Maybe Player
-full (x@(Just player):xs) | and $ map (== x) xs = Just player
-full _                                          = Nothing
+full (cell@(Just player):cells) | all (== cell) cells = Just player
+full _                                                = Nothing
 
 winner :: Board -> Maybe Player
-winner board = asum $ map full cells
-    where cells = map (map (board !)) coords :: [[Cell]]
-          coords = rows ++ cols ++ diags
-
-          rows  = [[(i,j) | i <- [0..n-1]] | j <- [0..n-1]]
-          cols  = [[(j,i) | i <- [0..n-1]] | j <- [0..n-1]]
-          diags = [[(i,i) | i <- [0..n-1]]
-                  ,[(i,j) | i <- [0..n-1], let j = n-1-i ]]
+winner board = asum $ map full $ rows ++ cols ++ diags
+    where rows  = [[board ! (i,j) | i <- [0..n-1]] | j <- [0..n-1]]
+          cols  = [[board ! (j,i) | i <- [0..n-1]] | j <- [0..n-1]]
+          diags = [[board ! (i,i) | i <- [0..n-1]]
+                  ,[board ! (i,j) | i <- [0..n-1], let j = n-1-i ]]
 
 countCells :: Cell -> Board -> Int
 countCells cell = length . filter ((==) cell) . elems
